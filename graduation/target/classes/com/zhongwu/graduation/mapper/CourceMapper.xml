@@ -1,0 +1,375 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongwu.graduation.mapper.CourceMapper" >
+  <resultMap id="BaseResultMap" type="com.zhongwu.graduation.domain.Cource" >
+    <id column="cource_id" property="courceId" jdbcType="VARCHAR" />
+    <result column="cource_name" property="courceName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="cover_url" property="coverUrl" jdbcType="VARCHAR" />
+    <result column="page_view" property="pageView" jdbcType="INTEGER" />
+    <result column="course_introduce" property="courseIntroduce" jdbcType="VARCHAR" />
+    <result column="cource_order" property="courceOrder" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="CourceMap" type="com.zhongwu.graduation.domain.Cource" >
+    <id column="cource_id" property="courceId" jdbcType="VARCHAR" />
+    <result column="cource_name" property="courceName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="cover_url" property="coverUrl" jdbcType="VARCHAR" />
+    <result column="page_view" property="pageView" jdbcType="INTEGER" />
+    <result column="course_introduce" property="courseIntroduce" jdbcType="VARCHAR" />
+    <result column="cource_order" property="courceOrder" jdbcType="INTEGER" />
+     <collection property="resourceNum"  resultMap="countmap"  />
+  </resultMap>
+  
+  <resultMap id="countmap" type="INTEGER" >
+	    <result column="counts" property="resourceNum" jdbcType="INTEGER" />
+  </resultMap>
+  
+   <resultMap id="courceListMap" type="com.zhongwu.graduation.domain.condition.CourceCondition" >
+	    <id column="cource_id" property="courceId" jdbcType="VARCHAR" />
+	    <result column="cource_name" property="courceName" jdbcType="VARCHAR" />
+	    <result column="course_type_id" property="courseTypeId" jdbcType="VARCHAR" />
+	    <result column="label_id" property="labelId" jdbcType="VARCHAR" />
+	    <result column="label_parent_id" property="labelParentId" jdbcType="VARCHAR" />
+	    <result column="type_parent_id" property="typeParentId" jdbcType="VARCHAR" />
+	    <result column="type" property="type" jdbcType="VARCHAR" />
+	    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="status" property="status" jdbcType="VARCHAR" />
+	    <result column="remark" property="remark" jdbcType="VARCHAR" />
+	    <result column="cover_url" property="coverUrl" jdbcType="VARCHAR" />
+	    <result column="page_view" property="pageView" jdbcType="INTEGER" />
+	    <result column="course_introduce" property="courseIntroduce" jdbcType="VARCHAR" />
+	    <result column="cource_order" property="courceOrder" jdbcType="INTEGER" />
+	    <result column="counts" property="resourceNum" jdbcType="INTEGER" />
+  </resultMap> 
+  
+  <sql id="Base_Column_List" >
+    cource_id, cource_name, type, create_time, update_time, status, remark, cover_url, 
+    page_view, course_introduce, cource_order
+  </sql>
+  
+  <sql id="Base_List" >
+   c.cource_id as cource_id, c.cource_name as cource_name,c.type as type,  c.create_time as create_time, c.update_time as update_time, c.status as status, c.remark as remark, c.cover_url as cover_url, 
+    c.page_view as page_view, c.course_introduce as course_introduce, c.cource_order as cource_order
+  </sql>
+  
+  <sql id="Count_List" >
+   c.cource_id as cource_id, c.cource_name as cource_name,c.type as type,  c.create_time as create_time, c.update_time as update_time, c.status as status, c.remark as remark, c.cover_url as cover_url, 
+    c.page_view as page_view, c.course_introduce as course_introduce, c.cource_order as cource_order,count(*) as counts
+  </sql>
+  
+  <sql id="Cresource_Column_List" >
+ 	c.cource_id as cource_id,ct.course_type_id as courseTypeId, l.label_id as labelId ,ct.type_parent_id as typeParentId,l.label_parent_id as labelParentId,c.cource_name as cource_name,c.type as type,  c.create_time as create_time, c.update_time as update_time, c.status as status, c.remark as remark, c.cover_url as cover_url, 
+    c.page_view as page_view, c.course_introduce as course_introduce, c.cource_order as cource_order,count(*) as counts
+  </sql> 
+  
+  
+  <!-- 根据条件查询课程信息 -->
+  
+  <sql id="pageParam">
+   	<if test="condition.courseTypeId != null and condition.courseTypeId != ''">
+   		from
+   		course_type ct
+		LEFT JOIN cource_type_relevance ctr on ct.course_type_id = ctr.course_type_id
+		RIGHT JOIN cource c on ctr.cource_id = c.cource_id
+		
+		LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+	    LEFT JOIN resources r on r.resource_id = cr.resource_id
+		WHERE ct.course_type_id = #{condition.courseTypeId,jdbcType=VARCHAR} 
+  	</if>
+  	<if test="condition.typeParentId != null and condition.typeParentId != ''">
+  		from
+   		course_type ct
+		LEFT JOIN cource_type_relevance ctr on ct.course_type_id = ctr.course_type_id
+		RIGHT JOIN cource c on ctr.cource_id = c.cource_id
+		LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+	    LEFT JOIN resources r on r.resource_id = cr.resource_id
+		WHERE ct.parent_id = #{condition.typeParentId,jdbcType=VARCHAR}
+	</if>
+  	<if test="condition.labelId != null and condition.labelId !=''">
+  		from
+	  	label l
+		LEFT JOIN course_label_relevance clr on l.label_id = clr.label_id
+		RIGHT JOIN cource c on clr.course_id = c.cource_id
+		
+		LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+	    LEFT JOIN resources r on r.resource_id = cr.resource_id
+		WHERE l.label_id = #{condition.labelId,jdbcType=VARCHAR} 
+  	</if> 
+  	<if test="condition.labelParentId != null and condition.labelParentId != ''">
+  		from
+   		course_type ct
+		LEFT JOIN cource_type_relevance ctr on ct.course_type_id = ctr.course_type_id
+		RIGHT JOIN cource c on ctr.cource_id = c.cource_id
+		
+		LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+	    LEFT JOIN resources r on r.resource_id = cr.resource_id
+		WHERE
+		 l.parent_id = #{condition.labelParentId,jdbcType=VARCHAR}
+	</if>
+  	<if test="condition.courceName != null and condition.courceName !=''">
+  		from cource c
+  	    LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+	    LEFT JOIN resources r on r.resource_id = cr.resource_id
+  		<bind name="condition.courceName" value="'%' + condition.courceName + '%'" />
+  	    where  c.cource_name like #{condition.courceName, jdbcType=VARCHAR}
+  	</if>
+  	<if	test="condition.courceOrder != '' and condition.courceOrder != null">
+	  	<if test="(condition.courseTypeId == null or condition.courseTypeId == '') and (condition.labelId == null or condition.labelId =='') and (condition.courceName == null or condition.courceName =='') and (condition.typeParentId == null or condition.typeParentId == '') and (condition.labelParentId == null or condition.labelParentId == '')">
+	  		from cource c
+	  	</if>
+	  	LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+	    LEFT JOIN resources r on r.resource_id = cr.resource_id
+  	</if>
+  	<if test="(condition.courceOrder == null or condition.courceOrder=='') and (condition.courseTypeId == null or condition.courseTypeId == '') and (condition.labelId == null or condition.labelId =='') and (condition.courceName == null or condition.courceName =='') and (condition.typeParentId == null or condition.typeParentId == '') and (condition.labelParentId == null or condition.labelParentId == '')">
+	  		from cource c
+	  	    LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+		    LEFT JOIN resources r on r.resource_id = cr.resource_id
+  	</if>
+   </sql>
+   
+   <select id="listByPage" resultMap="courceListMap">
+    select 
+    <include refid="Count_List" />
+   	<include refid="pageParam"/>
+   	group BY c.cource_id
+   	<if	test="condition.courceOrder == '1'">
+  		order by c.page_view asc
+  	</if>
+  	<if	test=" condition.courceOrder =='2'">
+  		order by c.page_view desc
+  	</if>
+  </select>
+  
+  <select id="listByPageCount" resultType="int" >
+  select count(t.counts) from
+  ( select count(*) counts
+   	<include refid="pageParam"/>
+   	group BY c.cource_id) t
+  </select>
+  
+  
+  <!--  通过id查询课程信息 -->
+  <select id="selectByPrimaryKey" resultMap="CourceMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Count_List" />
+    from cource c
+    LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+	LEFT JOIN resources r on r.resource_id = cr.resource_id
+    where c.cource_id = #{courceId,jdbcType=VARCHAR}
+    group BY c.cource_id
+  </select>
+  
+  <!-- 随机查找课程  -->
+  <select id="randomSelect" resultMap="CourceMap" parameterType="com.zhongwu.graduation.domain.Cource" >
+    select 
+    <include refid="Count_List" />
+    from cource c
+    LEFT JOIN cource_resource cr on c.cource_id  = cr.cource_id
+	LEFT JOIN resources r on r.resource_id = cr.resource_id
+    <if test="size or null" >
+ 	group BY c.cource_id      
+    ORDER BY RAND()
+    LIMIT  #{size,jdbcType=INTEGER}
+    </if>
+  </select>
+  
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from cource
+    where cource_id = #{courceId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhongwu.graduation.domain.Cource" >
+    insert into cource (cource_id, cource_name, type, 
+      create_time, update_time, status, 
+      remark, cover_url, page_view, 
+      course_introduce, cource_order)
+    values (#{courceId,jdbcType=VARCHAR}, #{courceName,jdbcType=VARCHAR}, #{type,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{status,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{coverUrl,jdbcType=VARCHAR}, #{pageView,jdbcType=INTEGER}, 
+      #{courseIntroduce,jdbcType=VARCHAR}, #{courceOrder,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhongwu.graduation.domain.Cource" >
+    insert into cource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="courceId != null" >
+        cource_id,
+      </if>
+      <if test="courceName != null" >
+        cource_name,
+      </if>
+      <if test="type != null" >
+        type,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="coverUrl != null" >
+        cover_url,
+      </if>
+      <if test="pageView != null" >
+        page_view,
+      </if>
+      <if test="courseIntroduce != null" >
+        course_introduce,
+      </if>
+      <if test="courceOrder != null" >
+        cource_order,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="courceId != null" >
+        #{courceId,jdbcType=VARCHAR},
+      </if>
+      <if test="courceName != null" >
+        #{courceName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="coverUrl != null" >
+        #{coverUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pageView != null" >
+        #{pageView,jdbcType=INTEGER},
+      </if>
+      <if test="courseIntroduce != null" >
+        #{courseIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="courceOrder != null" >
+        #{courceOrder,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhongwu.graduation.domain.Cource" >
+    update cource
+    <set >
+      <if test="courceName != null" >
+        cource_name = #{courceName,jdbcType=VARCHAR},
+      </if>
+      <if test="type != null" >
+        type = #{type,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="coverUrl != null" >
+        cover_url = #{coverUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="pageView != null" >
+        page_view = #{pageView,jdbcType=INTEGER},
+      </if>
+      <if test="courseIntroduce != null" >
+        course_introduce = #{courseIntroduce,jdbcType=VARCHAR},
+      </if>
+      <if test="courceOrder != null" >
+        cource_order = #{courceOrder,jdbcType=INTEGER},
+      </if>
+    </set>
+    where cource_id = #{courceId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhongwu.graduation.domain.Cource" >
+    update cource
+    set cource_name = #{courceName,jdbcType=VARCHAR},
+      type = #{type,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      status = #{status,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      cover_url = #{coverUrl,jdbcType=VARCHAR},
+      page_view = #{pageView,jdbcType=INTEGER},
+      course_introduce = #{courseIntroduce,jdbcType=VARCHAR},
+      cource_order = #{courceOrder,jdbcType=INTEGER}
+    where cource_id = #{courceId,jdbcType=VARCHAR}
+  </update>
+  
+  <resultMap id="MyCollectResultMap" type="com.zhongwu.graduation.domain.condition.MyCollectionCondition" >
+    <id column="cource_id" property="courceId" jdbcType="VARCHAR" />
+    <result column="cource_name" property="courceName" jdbcType="VARCHAR" />
+    <result column="type" property="type" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="cover_url" property="coverUrl" jdbcType="VARCHAR" />
+    <result column="page_view" property="pageView" jdbcType="INTEGER" />
+    <result column="course_introduce" property="courseIntroduce" jdbcType="VARCHAR" />
+    <result column="cource_order" property="courceOrder" jdbcType="INTEGER" />
+    
+     <result column="uploader_id" property="uploaderId" jdbcType="VARCHAR" />
+     <result column="uploader_name" property="uploaderName" jdbcType="VARCHAR" />
+     <result column="uploader_time" property="uploaderTime" jdbcType="TIMESTAMP" />
+     <result column="alert_time" property="alertTime" jdbcType="TIMESTAMP" />
+     <result column="collect_time" property="collectTime" jdbcType="TIMESTAMP" />
+     <result column="last_visitTime" property="last_visitTime" jdbcType="TIMESTAMP" />
+     <result column="collect_num" property="collectNum" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <sql id="my_cource_List" >
+   c.cource_id as cource_id, c.cource_name as cource_name,c.type as type,  c.create_time as create_time, c.update_time as update_time, c.status as status, c.remark as remark, c.cover_url as cover_url, 
+    c.page_view as page_view, c.course_introduce as course_introduce, c.cource_order as cource_order,count(*) as counts,
+    ucc.collect_time as collect_time ,pu.user_id as uploader_id,pu.uploader_name as uploader_name,count(*) as collect_num
+  </sql>
+  <!-- 查询用户收藏的课程  -->
+  <select id="wodCollectSelect" resultMap="MyCollectResultMap" parameterType="java.lang.String" >
+     select    <include refid="my_cource_List" />
+		  from cource c 
+			LEFT JOIN user_collect_cource ucc ON c.cource_id = ucc.cource_id
+			LEFT JOIN plat_user p ON   ucc.user_id = p.user_id 
+			LEFT JOIN user_cource uc ON c.cource_id = uc.cource_id
+			LEFT JOIN plat_user pu ON uc.user_id = pu.user_id
+			where   ucc.cource_id in(
+					select c.cource_id
+					from cource c 
+					LEFT JOIN user_collect_cource ucc ON c.cource_id = ucc.cource_id
+				  LEFT JOIN plat_user p2 ON   ucc.user_id = p2.user_id 
+				  <where>
+					  <if test="userId != null">
+						 p2.user_id=#{userId,jdbcType=VARCHAR}
+					  </if>
+				  </where>
+			)
+		GROUP BY ucc.cource_id
+		ORDER BY ucc.collect_time DESC
+  </select>
+</mapper>

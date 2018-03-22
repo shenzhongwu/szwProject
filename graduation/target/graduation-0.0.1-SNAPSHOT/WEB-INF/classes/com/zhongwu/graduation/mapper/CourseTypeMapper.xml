@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongwu.graduation.mapper.CourseTypeMapper" >
+  <resultMap id="BaseResultMap" type="com.zhongwu.graduation.domain.CourseType" >
+    <id column="course_type_id" property="courseTypeId" jdbcType="VARCHAR" />
+    <result column="course_type_name" property="courseTypeName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="label_count" property="labelCount" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+    <result column="cource_level" property="courceLevel" jdbcType="INTEGER" />
+  </resultMap>
+  
+  <resultMap id="TypeResultMap" type="com.zhongwu.graduation.domain.CourseType">
+    <id column="course_type_id" property="courseTypeId" jdbcType="VARCHAR" />
+    <result column="course_type_name" property="courseTypeName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="label_count" property="labelCount" jdbcType="INTEGER" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+     <result column="cource_level" property="courceLevel" jdbcType="INTEGER" />
+    <collection property="labelList"  resultMap="labelMap"  />
+  </resultMap>
+  
+   <resultMap id="labelMap" type="com.zhongwu.graduation.domain.Label" >
+    	<id column="label_id_l" property="labelId" jdbcType="VARCHAR" />
+	    <result column="label_name_l" property="labelName" jdbcType="VARCHAR" />
+	    <result column="remark_l" property="remark" jdbcType="VARCHAR" />
+	    <result column="create_time_l" property="createTime" jdbcType="TIMESTAMP" />
+	    <result column="update_time_l" property="updateTime" jdbcType="TIMESTAMP" />
+	    <result column="parent_id_l" property="parentId" jdbcType="VARCHAR" />
+  </resultMap>
+  
+  <sql id="Type_Label_List" >
+    c.course_type_id as course_type_id, c.course_type_name as course_type_name,c.remark as remark, c.create_time as create_time, c.label_count as label_count, c.update_time asupdate_time, 
+    c.parent_id as parent_id,  c.cource_level as cource_level,l.label_id as label_id_l,l.label_name as label_name_l, l.remark as remark_l, l.create_time as create_time_l, l.update_time as update_time_l, l.parent_id as parent_id_l
+  </sql>
+  
+   <sql id="Base_Column_List" >
+    course_type_id, course_type_name, remark, create_time, label_count, update_time, 
+    parent_id,cource_level
+  </sql>
+  
+   <select id="selectAllCourseType" resultMap="TypeResultMap"  >
+   	SELECT <include refid="Type_Label_List"/>
+    from course_type c
+	LEFT JOIN  type_label_relevance t 
+	ON c.course_type_id = t.course_type_id
+	LEFT JOIN label l
+	ON t.label_id = l.label_id
+	WHERE c.parent_id != "0"
+  </select> 
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from course_type
+    where course_type_id = #{courseTypeId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from course_type
+    where course_type_id = #{courseTypeId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhongwu.graduation.domain.CourseType" >
+    insert into course_type (course_type_id, course_type_name, remark, 
+      create_time, label_count, update_time, 
+      parent_id,cource_level)
+    values (#{courseTypeId,jdbcType=VARCHAR}, #{courseTypeName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{labelCount,jdbcType=INTEGER}, #{updateTime,jdbcType=TIMESTAMP}, 
+      #{parentId,jdbcType=VARCHAR},#{courceLevel,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhongwu.graduation.domain.CourseType" >
+    insert into course_type
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="courseTypeId != null" >
+        course_type_id,
+      </if>
+      <if test="courseTypeName != null" >
+        course_type_name,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="labelCount != null" >
+        label_count,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+       <if test="courceLevel != null" >
+        courc_level,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="courseTypeId != null" >
+        #{courseTypeId,jdbcType=VARCHAR},
+      </if>
+      <if test="courseTypeName != null" >
+        #{courseTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="labelCount != null" >
+        #{labelCount,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+        <if test="courceLevel != null" >
+        #{courcLevel,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhongwu.graduation.domain.CourseType" >
+    update course_type
+    <set >
+      <if test="courseTypeName != null" >
+        course_type_name = #{courseTypeName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="labelCount != null" >
+        label_count = #{labelCount,jdbcType=INTEGER},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+        <if test="courceLevel != null" >
+        #{courcLevel,jdbcType=INTEGER},
+      </if>
+    </set>
+    where course_type_id = #{courseTypeId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhongwu.graduation.domain.CourseType" >
+    update course_type
+    set course_type_name = #{courseTypeName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      label_count = #{labelCount,jdbcType=INTEGER},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      parent_id = #{parentId,jdbcType=VARCHAR},
+     cource_level = #{courcLevel,jdbcType=INTEGER}
+    where course_type_id = #{courseTypeId,jdbcType=VARCHAR}
+  </update>
+  
+    <select id="selectCourseType" resultMap="BaseResultMap" parameterType="com.zhongwu.graduation.domain.CourseType" >
+    select 
+    <include refid="Base_Column_List" />
+    from course_type
+    <where>
+    	<if test="courseTypeId !=null">
+    	 and course_type_id = #{courseTypeId,jdbcType=VARCHAR}
+    	</if>
+    	<if test="courseTypeName !=null">
+    	and course_type_name = #{courseTypeName,jdbcType=VARCHAR}
+    	</if>
+    	<if test="remark !=null">
+    	and remark = #{remark,jdbcType=VARCHAR}
+    	</if>
+    	<if test="createTime !=null">
+    	and create_time = #{createTime,jdbcType=TIMESTAMP}
+    	</if>
+    	<if test="labelCount !=null">
+    	and label_count = #{labelCount,jdbcType=INTEGER}
+    	</if>
+       <if test="updateTime !=null">
+    	and update_time = #{updateTime,jdbcType=TIMESTAMP}
+    	</if>
+    	<if test="parentId !=null">
+    	and parent_id = #{parentId,jdbcType=VARCHAR}
+    	</if>
+    </where>
+  </select>
+  
+</mapper>

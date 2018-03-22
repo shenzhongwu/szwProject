@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongwu.graduation.mapper.ResourcesMapper" >
+  <resultMap id="BaseResultMap" type="com.zhongwu.graduation.domain.Resources" >
+    <id column="resource_id" property="resourceId" jdbcType="VARCHAR" />
+    <result column="resource_name" property="resourceName" jdbcType="VARCHAR" />
+    <result column="resource_info_id" property="resourceInfoId" jdbcType="VARCHAR" />
+    <result column="upload_time" property="uploadTime" jdbcType="TIMESTAMP" />
+    <result column="upload_user" property="uploadUser" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="page_view" property="pageView" jdbcType="INTEGER" />
+    <result column="cover_url" property="coverUrl" jdbcType="VARCHAR" />
+    <result column="resource_order" property="resourceOrder" jdbcType="INTEGER" />
+    <result column="resource_type" property="resourceType" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    resource_id, resource_name, resource_info_id, upload_time, upload_user, status, remark, 
+    page_view, cover_url, resource_order, resource_type
+  </sql>
+  <sql id="Resource_List" >
+    r.resource_id as resource_id, r.resource_name as resource_name, r.resource_info_id as resource_info_id, r.upload_time as upload_time,r.upload_user as upload_user,r.status as status, r.remark as remark, 
+    r.page_view as page_view, r.cover_url as cover_url, r.resource_order as resource_order, r.resource_type as resource_type
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from resources
+    where resource_id = #{resourceId,jdbcType=VARCHAR}
+  </select>
+  
+   <select id="selectResourcesByCourceId" resultMap="BaseResultMap" parameterType="java.lang.String" >
+	select
+ <include refid="Resource_List" />
+    from cource c
+	LEFT JOIN cource_resource cr on c.cource_id = cr.cource_id
+	LEFT JOIN resources r on cr.resource_id = r.resource_id
+	WHERE c.cource_id =  #{courceId,jdbcType=VARCHAR}
+	ORDER BY r.resource_order asc
+  </select>
+  
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from resources
+    where resource_id = #{resourceId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhongwu.graduation.domain.Resources" >
+    insert into resources (resource_id, resource_name, resource_info_id, 
+      upload_time, upload_user, status, 
+      remark, page_view, cover_url, 
+      resource_order, resource_type)
+    values (#{resourceId,jdbcType=VARCHAR}, #{resourceName,jdbcType=VARCHAR}, #{resourceInfoId,jdbcType=VARCHAR}, 
+      #{uploadTime,jdbcType=TIMESTAMP}, #{uploadUser,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR}, 
+      #{remark,jdbcType=VARCHAR}, #{pageView,jdbcType=INTEGER}, #{coverUrl,jdbcType=VARCHAR}, 
+      #{resourceOrder,jdbcType=INTEGER}, #{resourceType,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhongwu.graduation.domain.Resources" >
+    insert into resources
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="resourceId != null" >
+        resource_id,
+      </if>
+      <if test="resourceName != null" >
+        resource_name,
+      </if>
+      <if test="resourceInfoId != null" >
+        resource_info_id,
+      </if>
+      <if test="uploadTime != null" >
+        upload_time,
+      </if>
+      <if test="uploadUser != null" >
+        upload_user,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="pageView != null" >
+        page_view,
+      </if>
+      <if test="coverUrl != null" >
+        cover_url,
+      </if>
+      <if test="resourceOrder != null" >
+        resource_order,
+      </if>
+      <if test="resourceType != null" >
+        resource_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="resourceId != null" >
+        #{resourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceName != null" >
+        #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceInfoId != null" >
+        #{resourceInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadTime != null" >
+        #{uploadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uploadUser != null" >
+        #{uploadUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="pageView != null" >
+        #{pageView,jdbcType=INTEGER},
+      </if>
+      <if test="coverUrl != null" >
+        #{coverUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceOrder != null" >
+        #{resourceOrder,jdbcType=INTEGER},
+      </if>
+      <if test="resourceType != null" >
+        #{resourceType,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhongwu.graduation.domain.Resources" >
+    update resources
+    <set >
+      <if test="resourceName != null" >
+        resource_name = #{resourceName,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceInfoId != null" >
+        resource_info_id = #{resourceInfoId,jdbcType=VARCHAR},
+      </if>
+      <if test="uploadTime != null" >
+        upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="uploadUser != null" >
+        upload_user = #{uploadUser,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="pageView != null" >
+        page_view = #{pageView,jdbcType=INTEGER},
+      </if>
+      <if test="coverUrl != null" >
+        cover_url = #{coverUrl,jdbcType=VARCHAR},
+      </if>
+      <if test="resourceOrder != null" >
+        resource_order = #{resourceOrder,jdbcType=INTEGER},
+      </if>
+      <if test="resourceType != null" >
+        resource_type = #{resourceType,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where resource_id = #{resourceId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhongwu.graduation.domain.Resources" >
+    update resources
+    set resource_name = #{resourceName,jdbcType=VARCHAR},
+      resource_info_id = #{resourceInfoId,jdbcType=VARCHAR},
+      upload_time = #{uploadTime,jdbcType=TIMESTAMP},
+      upload_user = #{uploadUser,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      page_view = #{pageView,jdbcType=INTEGER},
+      cover_url = #{coverUrl,jdbcType=VARCHAR},
+      resource_order = #{resourceOrder,jdbcType=INTEGER},
+      resource_type = #{resourceType,jdbcType=VARCHAR}
+    where resource_id = #{resourceId,jdbcType=VARCHAR}
+  </update>
+</mapper>

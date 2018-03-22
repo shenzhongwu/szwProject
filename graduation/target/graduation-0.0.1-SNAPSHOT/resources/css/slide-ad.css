@@ -1,0 +1,41 @@
+.div_ad{
+	width:100%;
+	height:240px;
+}
+.div_img img{
+	width:100%;
+    height:240px;
+}
+.slidePrev span {
+	background-image: url("/resources/images//img-sprite.png");
+	width:80px;
+	height: 70px;
+	float: left;
+	background-position:-12px -4px;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}
+ .slidePrev {
+    position: absolute;
+    top:50%;
+    left:-50px;
+    z-index: 10;
+}
+.slideNext {
+   
+  
+    position: absolute;
+    top:50%;
+    right:-50px;
+   
+    z-index: 10;
+}
+ .slideNext span {
+  background-image: url("../images/img-sprite.png");
+	width:80px;
+	height: 70px;
+	float: left;
+	background-position: -110px -4px;
+	background-repeat: no-repeat;
+	cursor: pointer;
+}

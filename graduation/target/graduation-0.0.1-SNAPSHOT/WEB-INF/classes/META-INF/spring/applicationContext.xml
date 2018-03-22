@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:p="http://www.springframework.org/schema/p"
+    xmlns:aop="http://www.springframework.org/schema/aop" 
+    xmlns:context="http://www.springframework.org/schema/context"
+    xmlns:mvc="http://www.springframework.org/schema/mvc"    
+    xsi:schemaLocation="http://www.springframework.org/schema/beans
+        http://www.springframework.org/schema/beans/spring-beans.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context-4.3.xsd
+        http://www.springframework.org/schema/aop
+        http://www.springframework.org/schema/aop/spring-aop-4.3.xsd
+       	http://www.springframework.org/schema/mvc    
+   	    http://www.springframework.org/schema/mvc/spring-mvc-4.3.xsd">
+   	    
+   	<context:component-scan base-package="com.zhongwu.graduation.controller.login"/>
+   	<context:component-scan base-package="com.zhongwu.graduation.controller.action"/>
+   	<context:component-scan base-package="com.fulan.freemarker.controller"/>
+	<context:component-scan base-package="com.zhongwu.graduation.service"/>
+	<context:component-scan base-package="com.zhongwu.graduation.domain"/>
+	<context:component-scan base-package="com.zhongwu.graduation.mapper"/>
+	
+    <!-- 基于注解驱动 -->
+	<mvc:annotation-driven />
+    <mvc:default-servlet-handler/>
+     <!-- Spring MVC + Spring JDBC +  --> 
+	<!--1定义一个jdbc数据源，创建一个驱动管理数据源的bean -->
+    <bean id="jdbcDataSource"
+        class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+        <property name="driverClassName" value="com.mysql.jdbc.Driver" />
+        <property name="url" value="jdbc:mysql://localhost:3306/mygraduationdesign?useUnicode=true&amp;characterEncoding=UTF-8&amp;zeroDateTimeBehavior=convertToNull" />
+        <property name="username" value="root" />
+        <property name="password" value="123456" />
+    </bean>
+      <!--创建一个sql会话工厂bean，指定数据源 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <!-- 指定数据源 -->
+        <property name="dataSource" ref="jdbcDataSource" />
+        <!--类型别名包，默认引入com.zhongwu.graduation.domain下的所有类 -->
+        <property name="typeAliasesPackage" value="com.zhongwu.graduation.domain"></property>
+        <!--指定sql映射xml文件的路径 -->
+        <property name="mapperLocations"
+            value="classpath:com/zhongwu/graduation/mapper/*Mapper.xml"></property>
+    </bean>
+    <!--自动扫描映射接口-->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <!-- 指定sql会话工厂，在上面配置过的 -->
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory"></property>
+        <!-- 指定基础包，即自动扫描com.zhongwu.graduation.mapper这个包以及它的子包下的所有映射接口类 -->
+        <property name="basePackage" value="com.zhongwu.graduation.mapper"></property>
+    </bean>
+    <!--下面的配置暂时未使用 
+    <context:component-scan base-package="com.zhongwu">
+    </context:component-scan>
+    <aop:aspectj-autoproxy proxy-target-class="true"></aop:aspectj-autoproxy>-->
+	
+	
+	<!-- 配置视图解析器-->
+	<bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">  
+	<!--  <property name="viewClass" value="org.springframework.web.servlet.view.JstlView"></property>-->	
+        <property name="prefix" value="/WEB-INF/jsp/"></property>  
+        <property name="suffix" value=".jsp"></property>  
+    </bean>  
+    <!-- 可上传文件
+    <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver"/>-->
+   <!--  <bean id="multipartResolver" class="org.springframework.web.multipart.commons.CommonsMultipartResolver">
+        <property name="defaultEncoding" value="UTF-8"></property>
+        <property name="maxInMemorySize" value="10240000"></property>
+    </bean>  -->
+    
+       <!-- 配置freeMarker的模板路径 -->  
+      <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerConfigurer">  
+        <property name="templateLoaderPath" value="WEB-INF/ftl/" />  
+        <property name="defaultEncoding" value="UTF-8" />  
+     </bean>  
+     <!-- freemarker视图解析器 -->  
+     <bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">  
+        <property name="suffix" value=".ftl" />  
+        <property name="contentType" value="text/html;charset=UTF-8" />  
+       <!-- 此变量值为pageContext.request, 页面使用方法：rc.contextPath   -->
+        <property name="requestContextAttribute" value="rc" />  
+     </bean>  
+     <!-- 容器默认的DefaultServletHandler处理 所有静态内容与无RequestMapping处理的URL -->
+   	<mvc:default-servlet-handler />
+ 	  <mvc:resources location="file:e:\\" mapping="/resources/graduation/**" /><!-- 未测试 -->
+     <!-- 导入Activiti配置 -->
+	<!-- <import resource="activiti-context.xml"/> -->
+</beans>

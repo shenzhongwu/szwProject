@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongwu.graduation.mapper.LabelMapper" >
+  <resultMap id="BaseResultMap" type="com.zhongwu.graduation.domain.Label" >
+    <id column="label_id" property="labelId" jdbcType="VARCHAR" />
+    <result column="label_name" property="labelName" jdbcType="VARCHAR" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="create_time" property="createTime" jdbcType="TIMESTAMP" />
+    <result column="update_time" property="updateTime" jdbcType="TIMESTAMP" />
+    <result column="parent_id" property="parentId" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    label_id, label_name, remark, create_time, update_time, parent_id
+  </sql>
+  
+  <select id="selectLabelList" resultMap="BaseResultMap" parameterType="com.zhongwu.graduation.domain.Label" >
+	    select 
+	    <include refid="Base_Column_List" />
+	    from label
+	    <where>
+	      <if test="labelId != null" >
+	       and label_id = #{labelId,jdbcType=VARCHAR}
+	      </if>
+	      <if test="labelName != null" >
+	      and label_name = #{labelName,jdbcType=VARCHAR}
+	      </if>
+	      <if test="remark != null" >
+	       and remark =  #{remark,jdbcType=VARCHAR}
+	      </if>
+	      <if test="createTime != null" >
+	      and create_time = #{createTime,jdbcType=TIMESTAMP}
+	      </if>
+	      <if test="updateTime != null" >
+	       and update_time #{updateTime,jdbcType=TIMESTAMP}
+	      </if>
+	      <if test="parentId != null" >
+	        and parent_id = #{parentId,jdbcType=VARCHAR}
+	      </if>
+	     	and parent_id  !="1"
+	    </where>
+  </select>
+  
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from label
+    where label_id = #{labelId,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from label
+    where label_id = #{labelId,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhongwu.graduation.domain.Label" >
+    insert into label (label_id, label_name, remark, 
+      create_time, update_time, parent_id
+      )
+    values (#{labelId,jdbcType=VARCHAR}, #{labelName,jdbcType=VARCHAR}, #{remark,jdbcType=VARCHAR}, 
+      #{createTime,jdbcType=TIMESTAMP}, #{updateTime,jdbcType=TIMESTAMP}, #{parentId,jdbcType=VARCHAR}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhongwu.graduation.domain.Label" >
+    insert into label
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="labelId != null" >
+        label_id,
+      </if>
+      <if test="labelName != null" >
+        label_name,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="createTime != null" >
+        create_time,
+      </if>
+      <if test="updateTime != null" >
+        update_time,
+      </if>
+      <if test="parentId != null" >
+        parent_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="labelId != null" >
+        #{labelId,jdbcType=VARCHAR},
+      </if>
+      <if test="labelName != null" >
+        #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentId != null" >
+        #{parentId,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhongwu.graduation.domain.Label" >
+    update label
+    <set >
+      <if test="labelName != null" >
+        label_name = #{labelName,jdbcType=VARCHAR},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null" >
+        create_time = #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="updateTime != null" >
+        update_time = #{updateTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="parentId != null" >
+        parent_id = #{parentId,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where label_id = #{labelId,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhongwu.graduation.domain.Label" >
+    update label
+    set label_name = #{labelName,jdbcType=VARCHAR},
+      remark = #{remark,jdbcType=VARCHAR},
+      create_time = #{createTime,jdbcType=TIMESTAMP},
+      update_time = #{updateTime,jdbcType=TIMESTAMP},
+      parent_id = #{parentId,jdbcType=VARCHAR}
+    where label_id = #{labelId,jdbcType=VARCHAR}
+  </update>
+</mapper>

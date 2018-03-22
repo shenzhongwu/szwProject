@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.zhongwu.graduation.mapper.UserCollectCourceMapper" >
+  <resultMap id="BaseResultMap" type="com.zhongwu.graduation.domain.UserCollectCource" >
+    <id column="id" property="id" jdbcType="VARCHAR" />
+    <result column="user_id" property="userId" jdbcType="VARCHAR" />
+    <result column="cource_id" property="courceId" jdbcType="VARCHAR" />
+    <result column="last_visit_resource_id" property="lastVisitResourceId" jdbcType="VARCHAR" />
+    <result column="collect_time" property="collectTime" jdbcType="TIMESTAMP" />
+    <result column="last_visit_time" property="lastVisitTime" jdbcType="TIMESTAMP" />
+    <result column="remark" property="remark" jdbcType="VARCHAR" />
+    <result column="status" property="status" jdbcType="VARCHAR" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    id, user_id, cource_id, last_visit_resource_id, collect_time, last_visit_time, remark, 
+    status
+  </sql>
+  <!-- 通过指定条件查询数据 -->
+   <select id="selecteSelective" resultMap="BaseResultMap" parameterType="com.zhongwu.graduation.domain.UserCollectCource" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_collect_cource
+    <where>
+    	<if test="id !=null">
+   		 and id = #{id,jdbcType=VARCHAR}
+  		</if>
+      <if test="userId != null" >
+       and user_id = #{userId,jdbcType=VARCHAR}
+      </if>
+      <if test="courceId != null" >
+       and cource_id =#{courceId,jdbcType=VARCHAR}
+      </if>
+      <if test="lastVisitResourceId != null" >
+       and last_visit_resource_id = #{lastVisitResourceId,jdbcType=VARCHAR}
+      </if>
+      <if test="collectTime != null" >
+       and collect_time = #{collectTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="lastVisitTime != null" >
+       and last_visit_time = #{lastVisitTime,jdbcType=TIMESTAMP}
+      </if>
+      <if test="remark != null" >
+       and remark = #{remark,jdbcType=VARCHAR}
+      </if>
+      <if test="status != null" >
+        and status = #{status,jdbcType=VARCHAR}
+      </if>
+    </where> 
+  </select>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.String" >
+    select 
+    <include refid="Base_Column_List" />
+    from user_collect_cource
+    where id = #{id,jdbcType=VARCHAR}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.String" >
+    delete from user_collect_cource
+    where id = #{id,jdbcType=VARCHAR}
+  </delete>
+  <insert id="insert" parameterType="com.zhongwu.graduation.domain.UserCollectCource" >
+    insert into user_collect_cource (id, user_id, cource_id, 
+      last_visit_resource_id, collect_time, last_visit_time, 
+      remark, status)
+    values (#{id,jdbcType=VARCHAR}, #{userId,jdbcType=VARCHAR}, #{courceId,jdbcType=VARCHAR}, 
+      #{lastVisitResourceId,jdbcType=VARCHAR}, #{collectTime,jdbcType=TIMESTAMP}, #{lastVisitTime,jdbcType=TIMESTAMP}, 
+      #{remark,jdbcType=VARCHAR}, #{status,jdbcType=VARCHAR})
+  </insert>
+  <insert id="insertSelective" parameterType="com.zhongwu.graduation.domain.UserCollectCource" >
+    insert into user_collect_cource
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        id,
+      </if>
+      <if test="userId != null" >
+        user_id,
+      </if>
+      <if test="courceId != null" >
+        cource_id,
+      </if>
+      <if test="lastVisitResourceId != null" >
+        last_visit_resource_id,
+      </if>
+      <if test="collectTime != null" >
+        collect_time,
+      </if>
+      <if test="lastVisitTime != null" >
+        last_visit_time,
+      </if>
+      <if test="remark != null" >
+        remark,
+      </if>
+      <if test="status != null" >
+        status,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="id != null" >
+        #{id,jdbcType=VARCHAR},
+      </if>
+      <if test="userId != null" >
+        #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="courceId != null" >
+        #{courceId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastVisitResourceId != null" >
+        #{lastVisitResourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="collectTime != null" >
+        #{collectTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastVisitTime != null" >
+        #{lastVisitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        #{status,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="com.zhongwu.graduation.domain.UserCollectCource" >
+    update user_collect_cource
+    <set >
+      <if test="userId != null" >
+        user_id = #{userId,jdbcType=VARCHAR},
+      </if>
+      <if test="courceId != null" >
+        cource_id = #{courceId,jdbcType=VARCHAR},
+      </if>
+      <if test="lastVisitResourceId != null" >
+        last_visit_resource_id = #{lastVisitResourceId,jdbcType=VARCHAR},
+      </if>
+      <if test="collectTime != null" >
+        collect_time = #{collectTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="lastVisitTime != null" >
+        last_visit_time = #{lastVisitTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="remark != null" >
+        remark = #{remark,jdbcType=VARCHAR},
+      </if>
+      <if test="status != null" >
+        status = #{status,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="com.zhongwu.graduation.domain.UserCollectCource" >
+    update user_collect_cource
+    set user_id = #{userId,jdbcType=VARCHAR},
+      cource_id = #{courceId,jdbcType=VARCHAR},
+      last_visit_resource_id = #{lastVisitResourceId,jdbcType=VARCHAR},
+      collect_time = #{collectTime,jdbcType=TIMESTAMP},
+      last_visit_time = #{lastVisitTime,jdbcType=TIMESTAMP},
+      remark = #{remark,jdbcType=VARCHAR},
+      status = #{status,jdbcType=VARCHAR}
+    where id = #{id,jdbcType=VARCHAR}
+  </update>
+</mapper>
